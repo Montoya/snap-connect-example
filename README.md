@@ -4,4 +4,5 @@ This is a demonstration of how to connect and install the MobyMask Anti-Phishing
 
 All of the code is in `index.html`. 
 
-Alternatively, a much simpler version using the SDK is in `withsdk.html`. 
+> [!NOTE]
+> The MetaMask SDK does not prevent provider clobbering.
