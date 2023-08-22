@@ -40,9 +40,15 @@ const snapName = 'MobyMask Anti-Phishing';
  * method to determine if the user is running an extension that supports
  * Snaps; this works for both Flask and MetaMask stable 
  * 
- * this is ugly because we do it twice but it seems to be the only way to 
- * get around provider clobbering - if multiple providers appear in "detected", 
- * we iterate through them, find the one that supports Snaps, and return that
+ * this is ugly because we do it twice but it seems to be the best way to 
+ * get around provider clobbering by both Phantom and Coinbase Wallet and 
+ * detect an extension that supports MetaMask Snaps
+ * 
+ * the only remaining thing to do is figure out what to recommend if a user
+ * does not have MetaMask installed... they should not be recommended to 
+ * install MetaMask Flask because that is only for developers... they should 
+ * be recommended to install MetaMask stable but only when the relevant version 
+ * is available 
  */
 const getProvider = async () => {
   let mmFound = false; 
