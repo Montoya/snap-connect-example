@@ -24,6 +24,7 @@ var snapId = 'npm:mobymask-snap';
  */
 if (["localhost", "127.0.0.1", ""].includes(window.location.hostname) ) {
   snapId = 'local:http://localhost:8080';
+  // note that this will only work if the snap is running locally on 8080!
 }
 
 const snapName = 'MobyMask Anti-Phishing'; 
@@ -36,7 +37,8 @@ const snapName = 'MobyMask Anti-Phishing';
  * Snaps; this works for both Flask and MetaMask stable 
  * 
  * this is ugly because we do it twice but it seems to be the only way to 
- * get around provider clobbering 
+ * get around provider clobbering - if multiple providers appear in "detected", 
+ * we iterate through them, find the one that supports Snaps, and return that
  */
 const getProvider = async () => {
   if ('detected' in window.ethereum) {
@@ -89,11 +91,13 @@ const getProvider = async () => {
             if( 
               Object.values(snaps).find(
                 (snap) =>
-                  snap.id === 'npm:mobymask-snap'
+                  snap.id === snapId
               )
             ) { 
               // the snap is installed 
-              console.log("snap installed"); 
+              var successMessage = document.createElement("p"); 
+              successMessage.textContent = snapName + " snap installed successfully!"; 
+              document.body.appendChild(successMessage); 
             }
             else { 
               // the snap was not installed 
