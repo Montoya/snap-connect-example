@@ -4,12 +4,16 @@
 <head>
 
   <title>Snap connect test</title>
+  <style type="text/css">
+    body { padding-top:4rem; } 
+    body, p { text-align: center; }
+  </style>
 
 </head>
 
 <body>
 
-  <p>Detecting...</p>
+  <p id="detectingMessage">Detecting...</p>
 
   <script type="text/javascript">
 
@@ -115,6 +119,7 @@ const getProvider = async () => {
       }
     }; 
     document.body.appendChild(button); 
+    document.getElementById("detectingMessage").style.display = "none"; 
   }
   /*
   provider.request({
