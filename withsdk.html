@@ -68,7 +68,7 @@ const provider = MMSDK.getProvider() // You can also access via window.ethereum
             }); 
             if( Object.keys(snaps).includes(snapId) ) { 
               // the snap is installed 
-              var successMessage = document.createElement("p"); 
+              const successMessage = document.createElement("p"); 
               successMessage.textContent = snapName + " snap installed successfully!"; 
               document.body.appendChild(successMessage); 
               document.getElementById("connectButton").style.display = "none"; 
@@ -89,6 +89,12 @@ const provider = MMSDK.getProvider() // You can also access via window.ethereum
       }
     }; 
     document.body.appendChild(button); 
+    document.getElementById("detectingMessage").style.display = "none"; 
+  }
+  else { 
+    const notFoundMessage = document.createElement("p"); 
+    notFoundMessage.textContent = "You do not have the MetaMask Snaps API."; 
+    document.body.appendChild(notFoundMessage); 
     document.getElementById("detectingMessage").style.display = "none"; 
   }
 
