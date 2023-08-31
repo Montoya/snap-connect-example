@@ -18,19 +18,7 @@
   <script src="metamask-sdk.js"></script>
   <script type="text/javascript">
 
-var snapId = 'npm:mobymask-snap'; 
-
-/* 
- * environment detection
- * 
- * this works for local testing and production deployment
- * at the very least you can use GitHub pages to make a production 
- * deployment and allow users to install your snap from npm
- */
-if (["localhost", "127.0.0.1", ""].includes(window.location.hostname) ) {
-  snapId = 'local:http://localhost:8080';
-  // note that this will only work if the snap is running locally on 8080!
-}
+const snapId = 'npm:mobymask-snap'; 
 
 const snapName = 'MobyMask Anti-Phishing'; 
 
@@ -62,51 +50,8 @@ const sdk = new MetaMaskSDK.MetaMaskSDK({
   }
 });
 
-const getProvider = async () => {
-  /*
-  let mmFound = false; 
-  if ('detected' in window.ethereum) {
-    for (const provider of window.ethereum.detected) {
-      try {
-        // Detect snaps support
-        await provider.request({
-          method: 'wallet_getSnaps',
-        });
-        // enforces MetaMask as provider 
-        window.ethereum.setProvider(provider);
-
-        mmFound = true; 
-        return provider;
-      } catch {
-        // no-op
-      }
-    }
-  }
-
-  if(!mmFound && 'providers' in window.ethereum) { 
-    for (const provider of window.ethereum.providers) { 
-      try {
-        // Detect snaps support
-        await provider.request({
-          method: 'wallet_getSnaps',
-        });
-        
-        window.ethereum = provider; 
-
-        mmFound = true; 
-        return provider;
-      } catch {
-        // no-op
-      }
-    }
-  }
-
-  return window.ethereum;*/
-  return ethereum;
-};
-
 (async () => { 
-  const provider = await getProvider(); 
+  const provider = await sdk.getProvider(); 
 
   const result = await provider.request({ 
     method: 'wallet_getSnaps', 

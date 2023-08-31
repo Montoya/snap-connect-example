@@ -17,19 +17,7 @@
 
   <script type="text/javascript">
 
-var snapId = 'npm:mobymask-snap'; 
-
-/* 
- * environment detection
- * 
- * this works for local testing and production deployment
- * at the very least you can use GitHub pages to make a production 
- * deployment and allow users to install your snap from npm
- */
-if (["localhost", "127.0.0.1", ""].includes(window.location.hostname) ) {
-  snapId = 'local:http://localhost:8080';
-  // note that this will only work if the snap is running locally on 8080!
-}
+const snapId = 'npm:mobymask-snap'; 
 
 const snapName = 'MobyMask Anti-Phishing'; 
 
