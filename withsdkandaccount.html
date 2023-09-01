@@ -3,7 +3,7 @@
 
 <head>
 
-  <title>Snap connect test with SDK</title>
+  <title>Snap connect test with SDK and account</title>
   <style type="text/css">
     body { padding-top:4rem; } 
     body, p { text-align: center; }
@@ -52,6 +52,10 @@ const sdk = new MetaMaskSDK.MetaMaskSDK({
 
 (async () => { 
   const provider = await sdk.getProvider(); 
+
+  const accounts = await provider.request({
+    method: 'eth_requestAccounts', 
+  }); 
 
   const result = await provider.request({ 
     method: 'wallet_getSnaps', 
