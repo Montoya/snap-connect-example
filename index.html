@@ -105,7 +105,7 @@ const getProvider = async () => {
         if(result) { 
 
           try { 
-            const snaps = await window.ethereum.request({
+            const snaps = await provider.request({
               method: 'wallet_getSnaps',
             }); 
             if( Object.keys(snaps).includes(snapId) ) { 
