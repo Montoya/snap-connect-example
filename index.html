@@ -1,143 +1,190 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-
-  <title>Snap connect test</title>
+  <title>MetaMask Snap connect example</title>
+  <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz@9..40&display=swap" rel="stylesheet">
   <style type="text/css">
-    body { padding-top:4rem; } 
-    body, p { text-align: center; }
+    body { 
+      background-color:#223; 
+      font-family:'DM Sans', sans-serif; 
+    }
+    #page { 
+      width:436px; 
+      margin:2em auto; 
+      padding:18px 24px;
+      border:2px solid #668; 
+      border-radius:8px;
+    }
+    .icon { 
+      width:24px;
+      height:24px; 
+      margin-right:12px; 
+      vertical-align:bottom;
+      position:relative;
+      top:-1px; 
+    }
+    .found { 
+      display:none; 
+    }
+    #page p { 
+      padding-top:8px; 
+    }
+    #page p .btn { 
+      float:right; 
+      vertical-align:bottom;
+      position:relative;
+      top:-1px;
+    }
+    #explanation { 
+      width:412px; 
+      margin:1em auto; 
+    }
+    #explanation a { 
+      text-decoration:underline;
+    }
   </style>
-
 </head>
-
 <body>
 
-  <p id="detectingMessage">Detecting...</p>
+  <div id="page" class="text-light">
+    <h1 class="h3">Detected Wallets</h1>
+    <div id="loading" class="loading loading-lg">Detecting...</div>
+  </div>
+
+  <div id="explanation" class="text-light">This demonstrates how to cleanly detect MetaMask, MetaMask Flask, or MetaMask Institutional and connect to a Snap by using EIP-6963: Multi Injected Provider Discovery. It avoids issues caused by provider pollution when running multiple wallets in the same browser profile. <a class="text-light" href="https://github.com/Montoya/snap-connect-test#readme">View code on GitHub</a></div>
 
   <script type="text/javascript">
 
-const snapId = 'npm:mobymask-snap'; 
-
-const snapName = 'MobyMask Anti-Phishing'; 
+const snapId = 'npm:@consensys/starknet-snap';
+const snapName = 'Starknet'; 
 
 /* 
- * provider detection
- * 
- * rather than detecting for Flask, we detect for a Snaps-specific 
- * method to determine if the user is running an extension that supports
- * Snaps; this works for both Flask and MetaMask stable 
- * 
- * this is ugly because we do it twice but it seems to be the best way to 
- * get around provider clobbering by both Phantom and Coinbase Wallet and 
- * detect an extension that supports MetaMask Snaps
- * 
- * the only remaining thing to do is figure out what to recommend if a user
- * does not have MetaMask installed... they should not be recommended to 
- * install MetaMask Flask because that is only for developers... they should 
- * be recommended to install MetaMask stable but only when the relevant version 
- * is available 
+ * Use EIP-6963 to detect MetaMask
  */
-const getProvider = async () => {
-  let mmFound = false; 
-  if ('detected' in window.ethereum) {
-    for (const provider of window.ethereum.detected) {
-      try {
-        // Detect snaps support
-        await provider.request({
-          method: 'wallet_getSnaps',
-        });
-        // enforces MetaMask as provider 
-        window.ethereum.setProvider(provider);
 
-        mmFound = true; 
-        return provider;
-      } catch {
-        // no-op
-      }
-    }
-  }
+function MetaMaskFound(providerDetail) { 
 
-  if(!mmFound && 'providers' in window.ethereum) { 
-    for (const provider of window.ethereum.providers) { 
-      try {
-        // Detect snaps support
-        await provider.request({
-          method: 'wallet_getSnaps',
-        });
-        
-        window.ethereum = provider; 
+  document.getElementById('loading').className = "found"; 
 
-        mmFound = true; 
-        return provider;
-      } catch {
-        // no-op
-      }
-    }
-  }
+  const row = document.createElement("p"); 
+  const icon = document.createElement("img"); 
+  icon.className = "icon"; 
+  icon.src = providerDetail.info.icon; 
+  row.appendChild(icon); 
+  const label = document.createElement("span"); 
+  label.textContent = providerDetail.info.name; 
+  row.appendChild(label); 
+  const btn = document.createElement("button"); 
+  btn.className = "btn btn-primary btn-sm"; 
+  btn.textContent = "Connect "+snapName+" Snap"; 
 
-  return window.ethereum;
-};
+  const provider = providerDetail.provider; 
 
-(async () => { 
-  const provider = await getProvider(); 
+  btn.onclick = async (event) => { 
+    event.preventDefault(); 
+    try { 
+      const result = await provider.request({ 
+        method: 'wallet_requestSnaps', 
+        params: 
+        {
+          [snapId]: { }
+        },
+      }); 
 
-  const result = await provider.request({ 
-    method: 'wallet_getSnaps', 
-  }); 
+      if(result) { 
 
-  if(result) { 
-    const button = document.createElement("button"); 
-    button.id = "connectButton"; 
-    button.textContent = "Connect and install the "+snapName+" snap"; 
-    button.onclick = async (event) => { 
-      event.preventDefault(); 
-
-      try { 
-        const result = await provider.request({
-          method: 'wallet_requestSnaps', 
-          params: 
-            {
-              [snapId]: { }
-            },
-        }); 
-
-        if(result) { 
-
-          try { 
-            const snaps = await provider.request({
-              method: 'wallet_getSnaps',
-            }); 
-            if( Object.keys(snaps).includes(snapId) ) { 
-              // the snap is installed 
-              var successMessage = document.createElement("p"); 
-              successMessage.textContent = snapName + " snap installed successfully!"; 
-              document.body.appendChild(successMessage); 
-              document.getElementById("connectButton").style.display = "none"; 
-            }
-            else { 
-              // the snap was not installed 
-            }
+        try { 
+          const snaps = await provider.request({
+            method: 'wallet_getSnaps',
+          }); 
+          if( Object.keys(snaps).includes(snapId) ) { 
+            // the snap is installed and connected 
+            btn.textContent = "Connected!"; 
+            btn.onclick = null; 
+            setTimeout(()=> { 
+              btn.textContent = "Get account deploy fee"; 
+              btn.onclick = async (event) => { 
+                const result = await provider.request({ 
+                  method: 'wallet_invokeSnap', 
+                  params: 
+                  { 
+                    snapId: snapId, 
+                    request: { 
+                      method: 'starkNet_estimateAccountDeployFee', 
+                      params: { 
+                        accountIndex: 0
+                      }
+                    }
+                  }
+                }); 
+                alert("Got fee: "+JSON.stringify(result)); 
+              }; 
+            }, 1000); 
           }
-          catch { 
-
+          else { 
+            // the snap was not installed 
           }
+        }
+        catch { 
 
         }
 
       }
-      catch { 
-        
-      }
-    }; 
-    document.body.appendChild(button); 
-    document.getElementById("detectingMessage").style.display = "none"; 
-  }
 
-})();
+    }
+    catch { 
+
+    }
+  }; 
+  row.appendChild(btn); 
+  document.getElementById('page').appendChild(row); 
+
+}
+
+window.onload = function() {
+
+  window.addEventListener(
+    "eip6963:announceProvider",
+    (event) => {
+      /* event.detail contains the discovered provider interface */ 
+      const providerDetail = event.detail; 
+      
+      /* 
+       * You could take one of these cases and use it for your needs,
+       * or set up a conditional that takes any of these possibilities, 
+       * or prompt the user to choose which MetaMask flavor they want to use 
+       * in case they have multiple MetaMask extensions installed at the same time
+       */
+      if(providerDetail.info.rdns == "io.metamask") { 
+        /* this is MetaMask */
+        MetaMaskFound(providerDetail); 
+      }
+      else if(providerDetail.info.rdns == "io.metamask.flask") { 
+        /* this is MetaMask Flask */ 
+        MetaMaskFound(providerDetail); 
+      }
+      else if(providerDetail.info.rdns == "io.metamask.mmi") { 
+        /* this is MetaMask Institutional */ 
+        MetaMaskFound(providerDetail); 
+      }
+    }
+  );
+
+  window.dispatchEvent(new Event("eip6963:requestProvider"));
+
+  setTimeout(() => { 
+    if("found"!==document.getElementById('loading').className) { 
+      /* Assume MetaMask was not detected */
+      document.getElementById('loading').className = "none"; 
+      document.getElementById('loading').textContent = "MetaMask was not found.";  
+    }
+  }, 1000)
+
+}
 
   </script>
-
 </body>
-
 </html>
