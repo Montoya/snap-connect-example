@@ -1,6 +1,6 @@
 # snap-connect-example
 
-This is a demonstration of how to connect to a Snap from a website in clean way that avoids common issues with provider pollution when a user is running multiple wallet extensions in the same browser profile, by using EIP-6963: Multi Injected Provider Discovery. 
+This is a demonstration of how to connect to a Snap from a website in a clean way that avoids common issues with provider pollution when a user is running multiple wallet extensions in the same browser profile, by using EIP-6963: Multi Injected Provider Discovery. 
 
 > [!NOTE]
 > While the MetaMask SDK provides automatic support for EIP-6963, it does not yet support Snaps.
