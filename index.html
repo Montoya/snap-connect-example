@@ -65,7 +65,7 @@ const snapName = 'Starknet';
  * Use EIP-6963 to detect MetaMask
  */
 
-function MetaMaskFound(providerDetail) { 
+const MetaMaskFound = (providerDetail) => { 
 
   document.getElementById('loading').className = "found"; 
 
@@ -142,7 +142,7 @@ function MetaMaskFound(providerDetail) {
   row.appendChild(btn); 
   document.getElementById('page').appendChild(row); 
 
-}
+}; 
 
 window.onload = function() {
 

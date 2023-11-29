@@ -1,6 +1,6 @@
 # snap-connect-example
 
-This is a demonstration of how to connect to a Snap from a website in clean way that avoids common issues with provider pollution when a user is running multiple wallet extensions in the same browser profile, by using EIP-6963: Multi Wallet Provider Discovery. 
+This is a demonstration of how to connect to a Snap from a website in clean way that avoids common issues with provider pollution when a user is running multiple wallet extensions in the same browser profile, by using EIP-6963: Multi Injected Provider Discovery. 
 
 > [!NOTE]
 > While the MetaMask SDK provides automatic support for EIP-6963, it does not yet support Snaps.
@@ -42,7 +42,7 @@ You can then get the wallet information and the provider object from the provide
 const snapId = 'npm:@consensys/starknet-snap';
 const snapName = 'Starknet'; 
 
-function MetaMaskFound(providerDetail) { 
+const MetaMaskFound = (providerDetail) => { 
 
   const row = document.createElement("p"); 
   const icon = document.createElement("img"); 
@@ -116,7 +116,7 @@ function MetaMaskFound(providerDetail) {
   row.appendChild(btn); 
   document.body.appendChild(row); 
 
-}
+};
 ```
 
 You can see a comprehesive example by viewing the source code of [index.html](https://github.com/Montoya/snap-connect-test/blob/main/index.html).
