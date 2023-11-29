@@ -84,10 +84,12 @@ window.onload = function() {
       const providerDetail = event.detail; 
       
       /* 
-       * Ideally you would take one of these cases and use it for your needs
-       * Or set up a conditional that takes any of these possibilities 
+       * Ideally you would take one of these cases and use it for your needs,
+       * or set up a conditional that takes any of these possibilities, 
+       * or prompt the user to choose which MetaMask flavor they want to use, 
+       * in case they have multiple MetaMask extensions installed at the same time
        * 
-       * In this example, all 3 providers can run in parallel, which is surreal
+       * In this crude example, all 3 providers can run in parallel, which is surreal
        */
 
       if(providerDetail.info.name == "MetaMask" && providerDetail.info.rdns == "io.metamask") { 
