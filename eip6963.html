@@ -1,17 +1,27 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-
   <title>Snap connect test</title>
-  <style type="text/css">
-    body { padding-top:4rem; } 
-    body, p { text-align: center; }
+  <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz@9..40&display=swap" rel="stylesheet">
+  <style type="text-css">
+    body { 
+      font-family:'DM Sans', sans-serif; 
+    }
+    #page { 
+      width:600px; 
+      margin:0 auto; 
+    }
   </style>
-
 </head>
+<body style="background-color:#224">
 
-<body>
+  <div id="page" class="text-light">
+    <h1 class="h3">Detected Wallets</h1>
+    <div class="loading">Detecting...</div>
+  </div>
 
   <p id="detectingMessage">Detecting...</p>
 
